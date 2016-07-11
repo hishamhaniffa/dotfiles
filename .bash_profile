@@ -18,10 +18,7 @@ export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # Custom $PATH with extra locations.
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/git/bin:$PATH
-
-# Load .bashrc if it exists
-test -f ~/.bashrc && source ~/.bashrc
+export PATH=/usr/local/bin:/usr/local/sbin:$HOME/bin:/usr/local/git/bin:$HOME/.composer/vendor/bin:$PATH
 
 # Flush DNS cache (See: http://support.apple.com/kb/ht5343).
 alias flush-dns='sudo killall -HUP mDNSResponder'
@@ -30,6 +27,12 @@ alias flush-dns='sudo killall -HUP mDNSResponder'
 if [ -f ~/.bash_aliases ]
 then
   source ~/.bash_aliases
+fi
+
+# Include bashrc file (if present).
+if [ -f ~/.bashrc ]
+then
+  source ~/.bashrc
 fi
 
 # Route local traffic over ethernet when using certain WiFi networks w/o proxy.
@@ -64,9 +67,13 @@ alias gsd='git svn dcommit'
 alias gsfr='git svn fetch && git svn rebase'
 
 # Turn on Git autocomplete.
-if [ -f `brew --prefix`/etc/bash_completion ]; then
-  . `brew --prefix`/etc/bash_completion
+brew_prefix=`brew --prefix`
+if [ -f $brew_prefix/etc/bash_completion ]; then
+  . $brew_prefix/etc/bash_completion
 fi
+
+# Use brew-installed PHP binaries.
+export PATH="$brew_prefix/opt/php56/bin:$PATH"
 
 # Vagrant configuration.
 # export VAGRANT_DEFAULT_PROVIDER='virtualbox'
@@ -74,9 +81,15 @@ fi
 # Disable cowsay in Ansible.
 export ANSIBLE_NOCOWS=1
 
-# Ansible aliases.
-alias an='ansible'
-alias ap='ansible-playbook'
+# Delete a given line number in the known_hosts file.
+knownrm() {
+  re='^[0-9]+$'
+  if ! [[ $1 =~ $re ]] ; then
+    echo "error: line number missing" >&2;
+  else
+    sed -i '' "$1d" ~/.ssh/known_hosts
+  fi
+}
 
 # Ask for confirmation when 'prod' is in a command string.
 prod_command_trap () {
@@ -96,4 +109,3 @@ shopt -s extdebug
 trap prod_command_trap DEBUG
 
 export PATH="$PATH:/Applications/DevDesktop/drush"
-
