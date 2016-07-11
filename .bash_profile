@@ -1,7 +1,12 @@
 #
 # .bash_profile
 #
+# original document
 # @author Jeff Geerling
+#
+# this version
+# @author Kay VanValkenburgh
+#
 # @see .inputrc
 #
 
@@ -13,7 +18,10 @@ export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # Custom $PATH with extra locations.
-export PATH=/usr/local/bin:/Users/jgeerling/bin:/usr/local/sbin:/usr/local/git/bin:/Developer/Eclipse/android-sdk-macosx/platform-tools:/Developer/Eclipse/android-sdk-macosx/tools:$PATH
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/git/bin:$PATH
+
+# Load .bashrc if it exists
+test -f ~/.bashrc && source ~/.bashrc
 
 # Flush DNS cache (See: http://support.apple.com/kb/ht5343).
 alias flush-dns='sudo killall -HUP mDNSResponder'
@@ -36,9 +44,9 @@ function route_delete() {
 
 # Route IRC traffic through one of my servers.
 # Use SOCKS5 settings 'localhost' and 6667 for server/port.
-function irc_proxy() {
-  ssh -vD 6667 geerlingguy@atl1.servercheck.in
-}
+# function irc_proxy() {
+#   ssh -vD 6667 geerlingguy@atl1.servercheck.in
+# }
 
 # Syntax-highlight code for copying and pasting.
 # Requires highlight (`brew install highlight`).
@@ -86,3 +94,6 @@ prod_command_trap () {
 }
 shopt -s extdebug
 trap prod_command_trap DEBUG
+
+export PATH="$PATH:/Applications/DevDesktop/drush"
+
